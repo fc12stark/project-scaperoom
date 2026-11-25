@@ -1,0 +1,1 @@
+-keep class edu.estudiantat.upc.EETACEscape.** { *; }

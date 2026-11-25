@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        tools:context=".HomeActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textUser"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textItemLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="ItemId"
+            app:layout_constraintTop_toBottomOf="@+id/textUser"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editItemId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="CAFE"
+            app:layout_constraintTop_toBottomOf="@+id/textItemLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonListShop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Listar Tienda"
+            app:layout_constraintTop_toBottomOf="@+id/editItemId"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonBuyItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Comprar Objeto"
+            app:layout_constraintTop_toBottomOf="@+id/buttonListShop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonReturnItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Devolver Objeto"
+            app:layout_constraintTop_toBottomOf="@+id/buttonBuyItem"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinnerLevels"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/buttonReturnItem"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonSetLevel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Inicializar Nivel (PUT)"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerLevels"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonInventory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Ver Inventario"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSetLevel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonNewGame"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Nueva Partida"
+            app:layout_constraintTop_toBottomOf="@+id/buttonInventory"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonLogout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Cerrar Sesión"
+            app:layout_constraintTop_toBottomOf="@+id/buttonNewGame"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@+id/buttonLogout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textResponses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
