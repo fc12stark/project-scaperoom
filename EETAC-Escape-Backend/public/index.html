@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>EETAC Escape</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>EETAC Escape</h1>
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" value="admin">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" value="1234">
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" class="form-control" id="email" value="alumne@eetac.upc.edu">
+    </div>
+    <button type="button" class="btn btn-primary" id="register">Registrarse</button>
+    <button type="button" class="btn btn-success" id="login">Login</button>
+
+    <p id="ects">ECTS: -</p>
+
+    <h3>Tienda</h3>
+    <div class="form-group">
+        <label for="itemId">ItemId</label>
+        <input type="text" class="form-control" id="itemId" value="CAFE">
+    </div>
+    <button type="button" class="btn btn-info" id="listShop">Listar Tienda</button>
+    <button type="button" class="btn btn-success" id="buyItem">Comprar Objeto</button>
+    <button type="button" class="btn btn-danger" id="returnItem">Devolver Objeto</button>
+
+    <h3>Nivel</h3>
+    <div class="form-group">
+        <label for="level">Nivel</label>
+        <select class="form-control" id="level">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+    </div>
+    <button type="button" class="btn btn-warning" id="changeLevel">Inicializar nivel (PUT)</button>
+
+    <h3>Tienda JSON</h3>
+    <pre id="shop"></pre>
+
+    <h3>Inventario</h3>
+    <pre id="inventory"></pre>
+
+    <h3>Resultado</h3>
+    <pre id="result"></pre>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var api = "http://localhost:8080/dsaApp/";
+    var userId = "";
+
+    function show(label, data) {
+        $("#result").text(label + "\n" + JSON.stringify(data, null, 2));
+    }
+
+    function needUser() {
+        if (userId === "") {
+            $("#result").text("Primero haz login o registro");
+            return false;
+        }
+        return true;
+    }
+
+    function loadUser() {
+        if (!needUser()) {
+            return;
+        }
+        $.ajax({
+            url: api + "users/" + userId,
+            type: "GET",
+            success: function (data) {
+                $("#ects").text("ECTS: " + data.ects);
+            },
+            error: function (xhr) {
+                $("#ects").text("ECTS: -");
+                show("GET usuario ERROR " + xhr.status, xhr.responseText);
+            }
+        });
+    }
+
+    function loadInventory() {
+        if (!needUser()) {
+            return;
+        }
+        $.ajax({
+            url: api + "users/" + userId + "/inventory",
+            type: "GET",
+            success: function (data) {
+                $("#inventory").text(JSON.stringify(data, null, 2));
+            },
+            error: function (xhr) {
+                show("GET inventario ERROR " + xhr.status, xhr.responseText);
+            }
+        });
+    }
+
+    function refreshUser() {
+        loadUser();
+        loadInventory();
+    }
+
+    function listShop() {
+        $.ajax({
+            url: api + "items",
+            type: "GET",
+            success: function (data) {
+                $("#shop").text(JSON.stringify(data, null, 2));
+                show("GET /items 200", data);
+            },
+            error: function (xhr) {
+                show("GET /items ERROR " + xhr.status, xhr.responseText);
+            }
+        });
+    }
+
+    $("#register").click(function () {
+        var user = {
+            username: $("#username").val(),
+            password: $("#password").val(),
+            email: $("#email").val()
+        };
+        $.ajax({
+            url: api + "users",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(user),
+            success: function (data) {
+                userId = data.id;
+                show("REGISTER OK " + userId, data);
+                refreshUser();
+            },
+            error: function (xhr) {
+                show("REGISTER ERROR " + xhr.status, xhr.responseText);
+            }
+        });
+    });
+
+    $("#login").click(function () {
+        var login = {
+            username: $("#username").val(),
+            password: $("#password").val()
+        };
+        $.ajax({
+            url: api + "sessions",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(login),
+            success: function (data) {
+                userId = data.id;
+                show("LOGIN OK " + userId, data);
+                refreshUser();
+            },
+            error: function (xhr) {
+                show("LOGIN ERROR " + xhr.status, xhr.responseText);
+            }
+        });
+    });
+
+    $("#listShop").click(function () {
+        listShop();
+    });
+
+    $("#buyItem").click(function () {
+        if (!needUser()) {
+            return;
+        }
+        var request = {
+            itemId: $("#itemId").val(),
+            quantitat: 1
+        };
+        $.ajax({
+            url: api + "users/" + userId + "/inventory",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(request),
+            success: function (data) {
+                show("COMPRAR OK 200", data);
+                refreshUser();
+            },
+            error: function (xhr) {
+                show("COMPRAR ERROR " + xhr.status, xhr.responseText);
+                refreshUser();
+            }
+        });
+    });
+
+    $("#returnItem").click(function () {
+        if (!needUser()) {
+            return;
+        }
+        var itemId = encodeURIComponent($("#itemId").val());
+        $.ajax({
+            url: api + "users/" + userId + "/inventory/" + itemId,
+            type: "DELETE",
+            success: function (data) {
+                show("DEVOLVER OK 200", data);
+                refreshUser();
+            },
+            error: function (xhr) {
+                show("DEVOLVER ERROR " + xhr.status, xhr.responseText);
+                refreshUser();
+            }
+        });
+    });
+
+    $("#changeLevel").click(function () {
+        if (!needUser()) {
+            return;
+        }
+        $.ajax({
+            url: api + "users/" + userId + "/level",
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify({ordre: parseInt($("#level").val())}),
+            success: function (data) {
+                show("PUT OK 200", data);
+                refreshUser();
+            },
+            error: function (xhr) {
+                show("PUT ERROR " + xhr.status, xhr.responseText);
+            }
+        });
+    });
+
+    listShop();
+</script>
+</body>
+</html>
